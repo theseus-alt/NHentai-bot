@@ -2,6 +2,8 @@ import discord
 import os
 from dotenv import load_dotenv
 from NHentai import NHentai
+from help import help
+
 
 
 
@@ -48,11 +50,66 @@ async def on_message(message):
                 embed.add_field(name="Groups", value=doujin.groups[0].name if len(doujin.groups)!=0 else "-", inline=True)
                 embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
                 embed.set_image(url=doujin.cover.src)
+                embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
                 await message.channel.send(embed=embed)            
             else:
                 await message.channel.send("Invalid Code")
         
+        elif command[0]=='search':
+            wait = await message.channel.send('Please wait...')
+
+            query=command[1]
+            num=command[2]
+            embed=discord.Embed(
+                title=query,
+                color=0xEC2854
+            )
+            results=nhentai.search(query=query, sort=None, page=1).total_results
+            #print (results)
+            if results==0:
+                await message.channel.send('Sorry we could not find something for the entered query.')
+
+            elif int(num)>20:
+                await message.channel.send("Please keep the count below 20 :)")
+            
+            elif results<int(num):
+                for i in range(results):
+                    name=nhentai.search(query=query, sort=None, page=1).doujins[i].title.english
+                    url=nhentai.search(query=query, sort=None, page=1).doujins[i].url
+                    embed.add_field(name=name, value=url, inline=False)
+                embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
+                embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
+                await message.channel.send(embed=embed)
+
+            else:
+                try:
+                    for i in range(int(num)):
+                        name=nhentai.search(query=query, sort=None, page=1).doujins[i].title.english
+                        url=nhentai.search(query=query, sort=None, page=1).doujins[i].url
+                        embed.add_field(name=name, value=url, inline=False)
+                    embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
+                    embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
+                    await message.channel.send(embed=embed)
+
+                except:
+                    await message.channel.send("An error occured, please try another query.")
+
+            await wait.delete()
+
+
         
+        elif(command[0]=='help'):
+            embed=discord.Embed(
+                title='Bot Commands',
+                color=0xEC2854
+            )
+            embed.add_field(name='info', value=help['info'], inline=False)
+            embed.add_field(name='cover', value=help['cover'], inline=False)
+            embed.add_field(name='random', value=help['random'], inline=False)
+            embed.add_field(name='pop', value=help['pop'], inline=False)
+            embed.add_field(name='search', value=help['search'], inline=False)
+            embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
+            await message.channel.send(embed=embed)
             
         elif command[0]=='cover':
             code=command[1]
@@ -65,6 +122,7 @@ async def on_message(message):
                    )            
                 embed.set_image(url=doujin.cover.src)
                 embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
+                embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
                 await message.channel.send(embed=embed)
             else:
                 await message.channel.send("Invalid Code")
@@ -92,6 +150,7 @@ async def on_message(message):
             embed.add_field(name="Groups", value=doujin.groups[0].name if len(doujin.groups)!=0 else "-", inline=True)
             embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
             embed.set_image(url=doujin.cover.src)
+            embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
             await message.channel.send(embed=embed)
             
             
@@ -107,6 +166,7 @@ async def on_message(message):
                 embed.add_field(name=x.title.english, value=x.url, inline=False)
             
             embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
+            embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
 
             await message.channel.send(embed=embed)    
 
