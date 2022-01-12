@@ -170,7 +170,10 @@ async def on_message(message):
             embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
             embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
 
-            await message.channel.send(embed=embed)    
+            await message.channel.send(embed=embed)   
+
+        elif (command[0]=='guild'):
+            await message.channel.send("I'm in " + str(len(client.guilds)) + " servers!")     
 
 
 
