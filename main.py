@@ -9,27 +9,43 @@ from help import help
 
 load_dotenv()
 client = discord.Client()
+nhentai = NHentai()
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     activity = discord.Game(name="nh!help")
     await client.change_presence(activity=activity)
 
-nhentai = NHentai()
+async def handleNsfw(x):
+    embed=discord.Embed(
+        type='gifv',
+        title='Please use a nsfw channel :)',
+        #video='https://i.imgur.com/7HtvXdb.gif'        
+    )
+    embed.set_image(url='https://i.imgur.com/7HtvXdb.gif')
+    await x.send(embed=embed)
 
-pre='nh!'
+pre='n!'
 @client.event
 async def on_message(message):
 
-
     if message.content.startswith(pre):
         txt=message.content
-        if(txt==pre+'ping'):
-            await message.channel.send('pong!')
         command=txt.split(pre)[1].split()
+        if command[0]=='ping':
+            await message.channel.send(client.latency)
+
 
         if (command[0]=='info'):
-            code=command[1]
+            if not (message.channel.is_nsfw()):
+                await handleNsfw(message.channel)
+                return
+            try:
+                code=command[1]
+            except IndexError:
+                await message.channel.send('Please enter an id')
+                return
             doujin=nhentai.get_doujin(id=code)
             if doujin!= None:
                 embed=discord.Embed(
@@ -58,10 +74,18 @@ async def on_message(message):
                 await message.channel.send("Invalid Code")
         
         elif command[0]=='search':
-            wait = await message.channel.send('Please wait...')
+            if not (message.channel.is_nsfw()):
+                await handleNsfw(message.channel)
+                return
 
-            query=command[1]
-            num=command[2]
+            try:
+                query=command[1]
+                num=command[2]
+            except IndexError:
+                await message.channel.send('Please enter the correct format. \nUse `nh!help` for further information')
+                return
+                
+            wait = await message.channel.send('Please wait...')
             embed=discord.Embed(
                 title=query,
                 color=0xEC2854
@@ -103,7 +127,8 @@ async def on_message(message):
         elif(command[0]=='help'):
             embed=discord.Embed(
                 title='Bot Commands',
-                color=0xEC2854
+                color=0xEC2854,
+                description='Please use these commands in a nsfw channel.'
             )
             embed.add_field(name='info', value=help['info'], inline=False)
             embed.add_field(name='cover', value=help['cover'], inline=False)
@@ -114,6 +139,9 @@ async def on_message(message):
             await message.channel.send(embed=embed)
             
         elif command[0]=='cover':
+            if not (message.channel.is_nsfw()):
+                await handleNsfw(message.channel)
+                return
             code=command[1]
             doujin=nhentai.get_doujin(id=code)
             if doujin!= None:
@@ -130,7 +158,10 @@ async def on_message(message):
                 await message.channel.send("Invalid Code")
             
 
-        elif command[0]=='random':            
+        elif command[0]=='random':
+            if not (message.channel.is_nsfw()):
+                await handleNsfw(message.channel)
+                return            
             doujin=nhentai.get_random()
             embed=discord.Embed(
                 title=doujin.title.english,
@@ -156,7 +187,10 @@ async def on_message(message):
             await message.channel.send(embed=embed)
             
             
-        elif command[0]=='pop':            
+        elif command[0]=='pop':   
+            if not (message.channel.is_nsfw()):
+                await handleNsfw(message.channel)
+                return         
             doujin=nhentai.get_popular_now()
             embed=discord.Embed(
                 title="Popular Now", 
