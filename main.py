@@ -26,7 +26,7 @@ async def handleNsfw(x):
     embed.set_image(url='https://i.imgur.com/7HtvXdb.gif')
     await x.send(embed=embed)
 
-pre='n!'
+pre='nh!'
 @client.event
 async def on_message(message):
 
