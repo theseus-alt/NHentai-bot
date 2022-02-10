@@ -73,6 +73,7 @@ async def on_message(message):
             else:
                 await message.channel.send("Invalid Code")
         
+        #Search function
         elif command[0]=='search':
             if not (message.channel.is_nsfw()):
                 await handleNsfw(message.channel)
@@ -81,7 +82,8 @@ async def on_message(message):
             try:
                 query=command[1]
                 num=command[2]
-            except IndexError:
+                results=nhentai.search(query=query, sort=None, page=1).total_results
+            except:
                 await message.channel.send('Please enter the correct format. \nUse `nh!help` for further information')
                 return
                 
@@ -90,7 +92,6 @@ async def on_message(message):
                 title=query,
                 color=0xEC2854
             )
-            results=nhentai.search(query=query, sort=None, page=1).total_results
             #print (results)
             if results==0:
                 await message.channel.send('Sorry we could not find something for the entered query.')
