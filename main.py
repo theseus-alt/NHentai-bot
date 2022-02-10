@@ -36,7 +36,7 @@ async def on_message(message):
         if command[0]=='ping':
             await message.channel.send(client.latency)
 
-
+        #info command
         if (command[0]=='info'):
             if not (message.channel.is_nsfw()):
                 await handleNsfw(message.channel)
@@ -124,7 +124,7 @@ async def on_message(message):
             await wait.delete()
 
 
-        
+        #help function
         elif(command[0]=='help'):
             embed=discord.Embed(
                 title='Bot Commands',
@@ -138,7 +138,8 @@ async def on_message(message):
             embed.add_field(name='search', value=help['search'], inline=False)
             embed.set_author(name=message.author.display_name , url="", icon_url=message.author.avatar_url)
             await message.channel.send(embed=embed)
-            
+        
+        #cover function   
         elif command[0]=='cover':
             if not (message.channel.is_nsfw()):
                 await handleNsfw(message.channel)
@@ -158,7 +159,7 @@ async def on_message(message):
             else:
                 await message.channel.send("Invalid Code")
             
-
+        #random function
         elif command[0]=='random':
             if not (message.channel.is_nsfw()):
                 await handleNsfw(message.channel)
@@ -187,7 +188,7 @@ async def on_message(message):
             embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
             await message.channel.send(embed=embed)
             
-            
+         #popular function   
         elif command[0]=='pop':   
             if not (message.channel.is_nsfw()):
                 await handleNsfw(message.channel)
