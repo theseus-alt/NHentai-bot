@@ -49,7 +49,7 @@ async def handleSlashNsfw(ctx):
 
 
 #Slash cover
-@client.slash_command(guild_ids=[843878576981147648], description="Get the cover of the entered doujin.")
+@client.slash_command(description="Get the cover of the entered doujin.")
 async def cover(ctx:discord.ApplicationContext, id:Option(int,"Enter the doujin code")):
     if not (ctx.channel.is_nsfw()):
                 await handleSlashNsfw(ctx)
@@ -70,7 +70,7 @@ async def cover(ctx:discord.ApplicationContext, id:Option(int,"Enter the doujin 
         await ctx.respond("Invalid Code")
 
 #Slash info
-@client.slash_command(guild_ids=[843878576981147648], description="Get useful information about the desired doujin.")
+@client.slash_command(description="Get useful information about the desired doujin.")
 async def info(ctx:discord.ApplicationContext, id:Option(int,"Enter the doujin code")):
     if not (ctx.channel.is_nsfw()):
         await handleSlashNsfw(ctx)
@@ -108,7 +108,7 @@ async def info(ctx:discord.ApplicationContext, id:Option(int,"Enter the doujin c
         await ctx.respond("Invalid Code")
 
 #Slash search
-@client.slash_command(guild_ids=[843878576981147648],description="Search using a tag.")
+@client.slash_command(description="Search using a tag.")
 async def search(
     ctx:discord.ApplicationContext, 
     query:Option(str,"Enter the query"),
@@ -164,7 +164,7 @@ async def search(
     # await wait.delete()
 
 #slash help
-@client.slash_command(guild_ids=[843878576981147648],description="Get a list of useful commands.")
+@client.slash_command(description="Get a list of useful commands.")
 async def help(ctx:discord.ApplicationContext):
     embed=discord.Embed(
                 title='Bot Commands',
@@ -180,7 +180,7 @@ async def help(ctx:discord.ApplicationContext):
     await ctx.respond(embed=embed)
 
 #Slash Random
-@client.slash_command(guild_ids=[843878576981147648], description="Get information about a random doujin.")
+@client.slash_command(description="Get information about a random doujin.")
 async def random(ctx:discord.ApplicationContext):
     if not (ctx.channel.is_nsfw()):
         await handleSlashNsfw(ctx)
@@ -210,7 +210,7 @@ async def random(ctx:discord.ApplicationContext):
     await ctx.respond(embed=embed)
 
 #Slash Popular
-@client.slash_command(guild_ids=[843878576981147648],description="Get a list of trending doujins.")
+@client.slash_command(description="Get a list of trending doujins.")
 async def popular(ctx:discord.ApplicationContext):
     if not (ctx.channel.is_nsfw()):
         await handleSlashNsfw(ctx)
