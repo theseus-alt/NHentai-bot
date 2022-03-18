@@ -12,7 +12,7 @@ helpList={
     "info":"Enter id of a doujin to get brief information about it. \n eg. `nh!info 117013`",
     "cover":"Enter id of a doujin to get it's cover image. \n eg. `nh!cover 117013` ",
     "random":"Get information about a random doujin.",
-    "search":"Seach the nhentai database using using a term followed by number of results you want. \n eg. `nh!search naruto 5` \n Note: Search queries with more than 10 doujins may take few extra seconds to process",
+    "search":"Seach the nhentai database using using a term followed by number of results you want. \n eg. `nh!search naruto 5` \n *Note: Search queries with more than 10 doujins may take few extra seconds to process. If you're not using the slash commnad, please keep the search query limited to only one word.*",
     "pop":"Get trending doujins in the current time."
 }
 
@@ -122,17 +122,12 @@ async def search(
     num=num
     await ctx.defer()
     results=nhentai.search(query=query, sort=None, page=1).total_results
-    # try:
-    # except:
-    #     await ctx.respond('Please enter the correct format. \nUse `nh!help` for further information')
-    #     return
-        
-    # wait = await ctx.respond('Please wait...')
+
     embed=discord.Embed(
         title=query,
         color=0xEC2854
     )
-    #print (results)
+
     if results==0:
         await ctx.respond('Sorry we could not find something for the entered query.')
 
@@ -161,8 +156,6 @@ async def search(
         except:
             await ctx.respond("An error occured, please try another query.")
 
-    # await wait.delete()
-
 #slash help
 @client.slash_command(description="Get a list of useful commands.")
 async def help(ctx:discord.ApplicationContext):
@@ -176,7 +169,6 @@ async def help(ctx:discord.ApplicationContext):
     embed.add_field(name='random', value=helpList['random'], inline=False)
     embed.add_field(name='pop', value=helpList['pop'], inline=False)
     embed.add_field(name='search', value=helpList['search'], inline=False)
-    # embed.set_author(name=ctx.author.display_name , url="", icon_url=ctx.author.avatar)
     await ctx.respond(embed=embed)
 
 #Slash Random
@@ -204,7 +196,6 @@ async def random(ctx:discord.ApplicationContext):
     embed.add_field(name="Favourites", value=doujin.total_favorites, inline=True)
     embed.add_field(name="Languages", value=doujin.languages[0].name, inline=True)
     embed.add_field(name="Groups", value=doujin.groups[0].name if len(doujin.groups)!=0 else "-", inline=True)
-    # embed.set_author(name=ctx.author.display_name , url="", icon_url=ctx.author.avatar)
     embed.set_image(url=doujin.cover.src)
     embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
     await ctx.respond(embed=embed)
@@ -226,7 +217,6 @@ async def popular(ctx:discord.ApplicationContext):
     for x in doujin.doujins:
         embed.add_field(name=x.title.english, value=x.url, inline=False)
         
-    # embed.set_author(name=ctx.author.display_name , url="", icon_url=ctx.author.avatar)
     embed.set_thumbnail(url="https://i.imgur.com/IGLxm6C.png")
     await ctx.respond(embed=embed)  
    
@@ -287,7 +277,7 @@ async def on_message(message):
 
             try:
                 query=command[1]
-                num=command[2]
+                num=int(command[2])
                 results=nhentai.search(query=query, sort=None, page=1).total_results
             except:
                 await message.channel.send('Please enter the correct format. \nUse `nh!help` for further information')
@@ -302,10 +292,10 @@ async def on_message(message):
             if results==0:
                 await message.channel.send('Sorry we could not find something for the entered query.')
 
-            elif int(num)>20:
+            elif num>20:
                 await message.channel.send("Please keep the count below 20 :)")
             
-            elif results<int(num):
+            elif results<num:
                 for i in range(results):
                     name=nhentai.search(query=query, sort=None, page=1).doujins[i].title.english
                     url=nhentai.search(query=query, sort=None, page=1).doujins[i].url
@@ -316,7 +306,7 @@ async def on_message(message):
 
             else:
                 try:
-                    for i in range(int(num)):
+                    for i in range(num):
                         name=nhentai.search(query=query, sort=None, page=1).doujins[i].title.english
                         url=nhentai.search(query=query, sort=None, page=1).doujins[i].url
                         embed.add_field(name=name, value=url, inline=False)
