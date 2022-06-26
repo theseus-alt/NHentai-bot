@@ -27,7 +27,7 @@ nhentai = NHentai()
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
-    activity = discord.Game(name="nh!help")
+    activity = discord.Game(name="maintenance simulator")
     await client.change_presence(activity=activity)
 
 async def handleNsfw(x):
