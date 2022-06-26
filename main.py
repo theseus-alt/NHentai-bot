@@ -28,7 +28,7 @@ nhentai = NHentai()
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
     activity = discord.Game(name="maintenance simulator")
-    await client.change_presence(activity=activity)
+    await client.change_presence(status=discord.Status.idle, activity=activity)
 
 async def handleNsfw(x):
     embed=discord.Embed(
